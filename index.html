@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FNDM — 너의 팬심을 위한 첫 알람</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;500;700;900&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--accent:#FF2D55;--bg:#000;--white:#fff;--dim:#666;--card:#111}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--white);font-family:'Noto Sans KR','Barlow Condensed',sans-serif;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+/* ===== BLURRED BACKGROUND ===== */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg-item{position:absolute;border-radius:16px;opacity:.07;filter:blur(50px)}
+.bg-item:nth-child(1){width:300px;height:420px;background:linear-gradient(135deg,#FFD700,#FF6B35);top:5%;left:-2%;animation:drift 25s ease-in-out infinite}
+.bg-item:nth-child(2){width:260px;height:360px;background:linear-gradient(135deg,#6C5CE7,#00B4D8);top:20%;right:-3%;animation:drift 30s ease-in-out infinite reverse}
+.bg-item:nth-child(3){width:220px;height:300px;background:linear-gradient(135deg,#FF2D55,#FF6B6B);bottom:10%;left:15%;animation:drift 22s ease-in-out infinite 3s}
+.bg-item:nth-child(4){width:180px;height:250px;background:linear-gradient(135deg,#00D4FF,#6C5CE7);bottom:5%;right:10%;animation:drift 28s ease-in-out infinite 6s}
+.bg-item:nth-child(5){width:240px;height:340px;background:linear-gradient(135deg,#FFD700,#FF2D55);top:50%;left:50%;transform:translate(-50%,-50%);animation:drift 20s ease-in-out infinite 1s}
+.bg-glow{position:absolute;border-radius:50%;opacity:.04;filter:blur(80px)}
+.bg-glow:nth-child(6){width:400px;height:400px;background:#6C5CE7;top:10%;right:20%;animation:pulse2 12s ease-in-out infinite}
+.bg-glow:nth-child(7){width:300px;height:300px;background:#00D4FF;bottom:20%;left:25%;animation:pulse2 15s ease-in-out infinite 4s}
+@keyframes drift{0%,100%{transform:translateY(0) rotate(0deg)}33%{transform:translateY(-20px) rotate(2deg)}66%{transform:translateY(15px) rotate(-1.5deg)}}
+@keyframes pulse2{0%,100%{opacity:.04;transform:scale(1)}50%{opacity:.08;transform:scale(1.15)}}
+.bg::after{content:'';position:absolute;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ===== MAIN ===== */
+.main{position:relative;z-index:1;width:100%;max-width:720px;padding:0 24px;text-align:center;display:flex;flex-direction:column;align-items:center}
+
+/* ===== LANG ===== */
+.lang{position:fixed;top:20px;right:24px;z-index:100;display:flex;border:1px solid rgba(255,255,255,.12);overflow:hidden}
+.lang button{padding:6px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;border:none;background:transparent;color:rgba(255,255,255,.3);cursor:pointer;transition:all .2s}
+.lang button.on{background:linear-gradient(135deg,#00F0FF,#7B61FF);color:var(--white)}
+
+.logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,10vw,96px);letter-spacing:8px;margin-top:clamp(80px,15vh,140px);line-height:1}
+.hero-title{font-size:clamp(28px,5vw,44px);font-weight:900;line-height:1.3;margin-top:40px}
+.hero-sub{font-size:clamp(15px,2.5vw,18px);color:var(--dim);margin-top:12px;font-weight:400}
+
+/* ===== CARDS ===== */
+.cards{display:flex;gap:12px;margin-top:48px;width:100%;max-width:560px}
+.card{flex:1;background:var(--card);border:1px solid rgba(255,255,255,.06);padding:20px 16px;text-align:left;cursor:pointer;transition:all .2s;position:relative}
+.card:hover{border-color:rgba(255,255,255,.15);background:#161616}
+.card.on{border-color:#7B61FF;background:rgba(123,97,255,.05)}
+.card.on .card-dot{background:linear-gradient(135deg,#00F0FF,#7B61FF);box-shadow:0 0 8px rgba(0,240,255,.4)}
+.card-icon{font-size:24px;margin-bottom:10px;display:block}
+.card-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--white)}
+.card-desc{font-size:11px;color:var(--dim);margin-top:4px;line-height:1.4}
+.card-dot{position:absolute;top:10px;right:10px;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.08);transition:background .2s}
+
+/* ===== EMAIL ===== */
+.email-section{margin-top:48px;width:100%;max-width:560px}
+.email-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--dim);margin-bottom:12px;text-align:left}
+.email-row{display:flex;border:1px solid rgba(255,255,255,.1);background:var(--card);transition:border-color .2s}
+.email-row:focus-within{border-color:#7B61FF;box-shadow:0 0 12px rgba(123,97,255,.15)}
+.email-input{flex:1;background:transparent;border:none;outline:none;padding:16px 20px;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:var(--white)}
+.email-input::placeholder{color:rgba(255,255,255,.2)}
+.email-btn{padding:16px 32px;border:none;background:linear-gradient(135deg,#00F0FF,#7B61FF,#FF2D55,#FFD600);background-size:300% 300%;animation:neonShift 4s ease infinite;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--white);cursor:pointer;transition:all .2s;white-space:nowrap}
+.email-btn:hover{filter:brightness(1.2);transform:translateY(-1px)}
+@keyframes neonShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.micro{margin-top:10px;font-size:11px;color:rgba(255,255,255,.2);text-align:left;display:flex;align-items:center;gap:6px}
+
+.success{display:none;margin-top:48px;text-align:center}
+.success.show{display:block;animation:fadeIn .4s ease-out}
+.success h3{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;margin-top:8px}
+.success p{color:var(--dim);font-size:14px;margin-top:6px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.footer{margin-top:64px;margin-bottom:40px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.12)}
+
+@media(max-width:600px){
+  .cards{flex-direction:column;gap:8px}
+  .card{display:flex;align-items:center;gap:12px;padding:16px}
+  .card-icon{margin-bottom:0;font-size:22px}
+  .card-desc{display:none}
+  .email-row{flex-direction:column}
+  .email-btn{text-align:center;padding:16px}
+  .lang{top:14px;right:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <div class="bg-item"></div><div class="bg-item"></div><div class="bg-item"></div>
+  <div class="bg-item"></div><div class="bg-item"></div>
+  <div class="bg-glow"></div><div class="bg-glow"></div>
+</div>
+
+<div class="lang">
+  <button class="on" onclick="setLang('ko')" data-l="ko">한국어</button>
+  <button onclick="setLang('en')" data-l="en">ENG</button>
+</div>
+
+<div class="main">
+  <div class="logo">FNDM</div>
+  <h1 class="hero-title" data-ko="너의 팬심을 위한 첫 알람" data-en="The First Alert for Your Fandom">너의 팬심을 위한 첫 알람</h1>
+  <p class="hero-sub" data-ko="콘텐츠도, 드롭 상품도 가장 먼저!" data-en="Be the first to get content and drops!">콘텐츠도, 드롭 상품도 가장 먼저!</p>
+
+  <div class="cards">
+    <div class="card" onclick="pick(this)" data-v="pokemon">
+      <span class="card-icon">🃏</span>
+      <div>
+        <div class="card-name" data-ko="포켓몬 트레이딩 카드" data-en="Pokémon Cards">포켓몬 트레이딩 카드</div>
+        <div class="card-desc" data-ko="희귀 카드, 신규 팩, 리셀 알림" data-en="Rare cards, new packs, resale alerts">희귀 카드, 신규 팩, 리셀 알림</div>
+      </div>
+      <span class="card-dot"></span>
+    </div>
+    <div class="card" onclick="pick(this)" data-v="figures">
+      <span class="card-icon">🤖</span>
+      <div>
+        <div class="card-name" data-ko="신규 피규어" data-en="New Figures">신규 피규어</div>
+        <div class="card-desc" data-ko="한정 피규어, 프리오더, 발매 알림" data-en="Limited figures, pre-orders, drops">한정 피규어, 프리오더, 발매 알림</div>
+      </div>
+      <span class="card-dot"></span>
+    </div>
+    <div class="card" onclick="pick(this)" data-v="toys">
+      <span class="card-icon">🎮</span>
+      <div>
+        <div class="card-name" data-ko="토이 컬렉션" data-en="Toy Collection">토이 컬렉션</div>
+        <div class="card-desc" data-ko="베어브릭, 아트토이, 콜라보 드랍" data-en="Bearbrick, art toys, collabs">베어브릭, 아트토이, 콜라보 드랍</div>
+      </div>
+      <span class="card-dot"></span>
+    </div>
+  </div>
+
+  <div class="email-section" id="emailWrap">
+    <div class="email-label" data-ko="가장 먼저 알림 받기" data-en="Get Early Alerts">가장 먼저 알림 받기</div>
+    <div class="email-row">
+      <input class="email-input" id="emailIn" type="email" data-ko-ph="이메일을 입력하세요" data-en-ph="Enter your email" placeholder="이메일을 입력하세요">
+      <button class="email-btn" onclick="submit()"><span data-ko="지금 신청 →" data-en="Subscribe →">지금 신청 →</span></button>
+    </div>
+    <div class="micro"><span>🔒</span><span data-ko="스팸 없음. 진짜 중요한 것만 보냅니다." data-en="No spam. Only the drops that matter.">스팸 없음. 진짜 중요한 것만 보냅니다.</span></div>
+  </div>
+
+  <div class="success" id="ok">
+    <div style="font-size:36px">✅</div>
+    <h3 data-ko="등록 완료!" data-en="YOU'RE IN!">등록 완료!</h3>
+    <p data-ko="가장 먼저 알림을 보내드릴게요." data-en="We'll alert you first.">가장 먼저 알림을 보내드릴게요.</p>
+  </div>
+
+  <div class="footer">For the Real Ones. <span style="color:rgba(255,255,255,.3)">CultureCode</span></div>
+</div>
+
+<script>
+let lang='ko';const sel=new Set();
+function setLang(l){lang=l;document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));document.querySelectorAll('[data-ko]').forEach(e=>e.textContent=e.getAttribute('data-'+l));const i=document.getElementById('emailIn');if(i)i.placeholder=i.getAttribute('data-'+l+'-ph')}
+function pick(c){const v=c.dataset.v;if(sel.has(v)){sel.delete(v);c.classList.remove('on')}else{sel.add(v);c.classList.add('on')}}
+function submit(){const e=document.getElementById('emailIn').value.trim();if(!e||!e.includes('@')){document.getElementById('emailIn').focus();return}const s=encodeURIComponent('FNDM Signup'),b=encodeURIComponent('Email: '+e+'\nInterests: '+[...sel].join(', ')+'\nTime: '+new Date().toISOString());const a=document.createElement('a');a.href='mailto:sunpark@gmail.com?subject='+s+'&body='+b;a.click();document.getElementById('emailWrap').style.display='none';document.getElementById('ok').classList.add('show')}
+</script>
+</body>
+</html>
